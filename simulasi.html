@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulasi Algoritma Page Replacement</title>
     <style>
-        /* --- VARIABEL WARNA (TIDAK BERUBAH) --- */
+        /* --- VARIABEL WARNA --- */
         :root {
-            --primary: #4a90e2; /* Biru Cerah */
-            --secondary: #50e3c2; /* Hijau Teal */
+            --primary: #4a90e2;
+            --secondary: #50e3c2;
             --background: #f0f4f8;
             --card-bg: #ffffff;
             --text-color: #333;
@@ -18,7 +18,7 @@
             --hit-text: #008000;
         }
 
-        /* --- TATA LETAK DASAR (TIDAK BERUBAH) --- */
+        /* --- TATA LETAK DASAR --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--background);
@@ -46,7 +46,7 @@
             margin-bottom: 20px;
         }
         
-        /* --- NAVIGATION (TIDAK BERUBAH) --- */
+        /* --- NAVIGATION --- */
         header {
             background-color: var(--primary);
             padding: 0;
@@ -114,26 +114,31 @@
             color: white;
         }
         
-        /* ==================================== */
         /* --- TATA LETAK HORIZONTAL BARU --- */
-        /* ==================================== */
         .simulation-layout {
             display: flex;
-            gap: 30px; /* Jarak antara kolom Input dan Hasil */
-            align-items: flex-start; /* Sejajarkan di bagian atas */
+            gap: 30px;
+            align-items: flex-start;
         }
         
         .input-section {
-            flex: 0 0 350px; /* Lebar tetap untuk input pada layar besar */
+            flex: 0 0 380px;
             padding-right: 20px;
-            border-right: 1px solid #eee;
-            position: sticky; /* Agar input tetap terlihat saat menggulir hasil */
-            top: 100px; /* Jarak dari header fixed */
+            border-right: 2px solid #e0e0e0;
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .results-section {
-            flex-grow: 1; /* Mengambil sisa ruang */
-            min-width: 0; /* Penting untuk flexbox */
+            flex-grow: 1;
+            min-width: 0;
+            width: 100%;
         }
         
         /* Responsif: Tumpuk saat layar kecil */
@@ -145,14 +150,18 @@
             .input-section {
                 flex: none;
                 width: 100%;
+                max-width: 100%;
                 padding-right: 0;
                 border-right: none;
-                border-bottom: 1px solid #eee;
-                position: sticky; /* Hilangkan sticky pada layar kecil */
+                border-bottom: 2px solid #e0e0e0;
+                position: relative;
+                max-height: none;
+                overflow-y: visible;
+                margin-bottom: 20px;
             }
         }
         
-        /* --- INPUT & BUTTON STYLING (TIDAK BERUBAH) --- */
+        /* --- INPUT & BUTTON STYLING --- */
         .input-group {
             margin-bottom: 20px;
             width: 100%; 
@@ -190,28 +199,28 @@
         }
 
         button {
-            padding: 12px 20px;
+            padding: 10px 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             transition: background-color 0.3s ease, transform 0.1s;
         }
 
         #actionButtons {
             display: flex; 
-            gap: 15px; 
+            gap: 10px; 
             margin-top: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             flex-wrap: wrap; 
         }
 
         #actionButtons button {
-            flex-grow: 1; 
-            min-width: 150px;
-            width: auto; 
-            margin-top: 0;
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 12px;
+            font-size: 13px;
         }
 
         #runButton {
@@ -248,6 +257,7 @@
         .container > button {
             display: none;
         }
+
         #algorithmCheckboxes a {
             font-size: 0.9em;
             color: #6c757d;
@@ -256,7 +266,6 @@
             margin-bottom: 10px;
         }
 
-        /* CSS BARU UNTUK SEJAJAR VERTIKAL */
         #algorithmCheckboxes {
             width: 100%;
             display: block; 
@@ -270,18 +279,28 @@
             margin-bottom: 10px; 
             font-weight: bold;
             color: var(--primary);
-            margin-right: 0; 
         }
 
-        /* Kunci: Membuat setiap label checkbox mengambil baris penuh */
-        #algorithmCheckboxes label {
-            display: block; 
-            margin-bottom: 5px; 
-            margin-right: 0; 
+        /* Checkbox sejajar horizontal */
+        #algorithmCheckboxes .checkbox-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        /* --- SIMULATION & OUTPUT STYLING (TIDAK BERUBAH) --- */
+        #algorithmCheckboxes .checkbox-container label {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
 
+        #algorithmCheckboxes .checkbox-container input[type="checkbox"] {
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        /* --- SIMULATION & OUTPUT STYLING --- */
         .simulation-card {
             background: #f7f9fc;
             border-left: 5px solid var(--primary);
@@ -295,6 +314,11 @@
             color: var(--primary);
             border-bottom: 2px solid var(--secondary);
             padding-bottom: 5px;
+            margin-top: 0;
+        }
+        
+        #simulationOutput {
+            min-height: 50px;
         }
 
         .summary {
@@ -319,7 +343,7 @@
             border-color: var(--hit-text);
         }
 
-        /* --- Table Styling (TIDAK BERUBAH) --- */
+        /* --- Table Styling --- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -355,7 +379,7 @@
             min-width: 30px;
         }
 
-        /* --- Comparison Output (TIDAK BERUBAH) --- */
+        /* --- Comparison Output --- */
         #comparisonOutput {
             margin-top: 30px; 
             padding: 20px;
@@ -389,32 +413,67 @@
             min-height: 10px; 
         }
 
-        /* ==================================== */
-        /* --- STYLE BARU UNTUK STEPPER --- */
-        /* ==================================== */
-
+        /* --- STYLE UNTUK STEPPER --- */
         #stepControls {
             border: 1px solid #ddd;
             padding: 15px;
             border-radius: 8px;
             background-color: #f9f9f9;
-            margin-bottom: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
+        #stepControls h3 {
+            text-align: center;
+            color: #ff9800;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
         #stepControls button {
-            padding: 8px 15px;
-            font-size: 14px;
-            margin: 5px;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 3px;
             font-weight: normal;
         }
         
-        #stepBtn { background-color: #ff9800; color: white; }
-        #playBtn { background-color: var(--primary); color: white; }
-        #resetStepBtn { background-color: #bdbdbd; color: #333; }
+        #stepBtn { 
+            background-color: #ff9800; 
+            color: white; 
+        }
         
+        #stepBtn:hover { 
+            background-color: #f57c00; 
+        }
+        
+        #playBtn { 
+            background-color: var(--primary); 
+            color: white; 
+        }
+        
+        #playBtn:hover { 
+            background-color: #387ac7; 
+        }
+        
+        #resetStepBtn { 
+            background-color: #bdbdbd; 
+            color: #333; 
+        }
+        
+        #resetStepBtn:hover { 
+            background-color: #9e9e9e; 
+        }
+        
+        #algoSelectorContainer {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
         #algoSelectorContainer label, #stepCurrentAlgoLabel {
             font-weight: bold;
             color: var(--primary);
+            font-size: 0.95em;
         }
 
         #stepAlgoSelect {
@@ -422,6 +481,15 @@
             border-radius: 4px;
             border: 1px solid #ccc;
             margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .step-button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
         }
 
         .step-visualization-table {
@@ -429,24 +497,47 @@
             border-collapse: collapse;
             margin-top: 15px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            table-layout: fixed;
         }
+        
         .step-visualization-table th, .step-visualization-table td {
             border: 1px solid #e9ecef;
             padding: 8px;
             text-align: center;
         }
+        
         .step-visualization-table th {
             background-color: #555;
             color: white;
+            position: sticky;
+            top: 80px;
+            z-index: 50;
         }
+        
         .step-visualization-table tbody tr:nth-child(even) {
             background-color: #f7f7f7;
         }
+        
         .current-step-row {
-            background-color: #fff9c4 !important; /* Highlight baris langkah saat ini */
+            background-color: #fff9c4 !important;
             border: 2px solid #ffeb3b;
         }
         
+        #stepVisualizationOutput {
+            min-height: 100px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Sticky step controls pada results section */
+        .results-section #stepControls {
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -485,50 +576,47 @@
                             
                             <div id="algorithmCheckboxes">
                                 <label>Pilih Algoritma:</label>
-                                    <div class>
-                                        <label><input type="checkbox" name="algo" value="FIFO" checked id="algo-fifo"> FIFO</label>
-                                        <label><input type="checkbox" name="algo" value="LRU" checked id="algo-lru"> LRU</label>
-                                        <label><input type="checkbox" name="algo" value="Optimal" checked id="algo-optimal"> Optimal</label>
-                                    </div>
+                                <div class="checkbox-container">
+                                    <label><input type="checkbox" name="algo" value="FIFO" checked id="algo-fifo"> FIFO</label>
+                                    <label><input type="checkbox" name="algo" value="LRU" checked id="algo-lru"> LRU</label>
+                                    <label><input type="checkbox" name="algo" value="Optimal" checked id="algo-optimal"> Optimal</label>
+                                </div>
                                 <a>* Centang algoritma yang ingin dijalankan.</a>
                             </div>
                         </div>
                         
                         <div id="actionButtons"> 
-                            <button onclick="runAllSimulations()" id="runButton">Jalankan Simulasi 🚀</button>
-                            <button type="button" onclick="toggleComparison()" id="toggleComparisonButton" disabled>Tampilkan Perbandingan 📊</button>
-                            <button type="button" onclick="resetSimulation()" id="resetButton">Atur ulang 🧹</button> 
+                            <button onclick="runAllSimulations()" id="runButton">🚀 Jalankan</button>
+                            <button type="button" onclick="toggleComparison()" id="toggleComparisonButton" disabled>📊 Perbandingan</button>
+                            <button type="button" onclick="resetSimulation()" id="resetButton">🧹 Reset</button> 
                         </div>
+
                         <div id="stepControls" style="display: none;">
-                            <h3 style="text-align: center; color: #ff9800; margin-top: 0; margin-bottom: 15px;">Visualisasi Langkah (Step-by-Step)</h3>
+                            <h3>Visualisasi Step-by-Step</h3>
 
-                            <div id="algoSelectorContainer" style="margin-bottom: 10px; text-align: center;">
-                                </div>
+                            <div id="algoSelectorContainer" style="margin-bottom: 10px; text-align: center;"></div>
                             
-                            <h4 id="stepCurrentAlgoLabel" style="text-align: center; color: var(--primary); display: none; margin-bottom: 15px;"></h4>
-                            <div style="text-align: center;">
+                            <h4 id="stepCurrentAlgoLabel" style="text-align: center; color: var(--primary); display: none; margin-bottom: 10px; font-size: 0.95em;"></h4>
+                            
+                            <div class="step-button-container">
                                 <button id="playBtn" onclick="play()">▶️ Play</button>
-                                <button id="stepBtn" onclick="step()">➡️ Next Step</button>
-                                <button id="resetStepBtn" onclick="resetStepper()">⏪ Reset Step</button>
+                                <button id="stepBtn" onclick="step()">➡️ Step</button>
+                                <button id="resetStepBtn" onclick="resetStepper()">⏪ Reset</button>
                             </div>
-
                         </div>
                     </div>
                     
                     <div class="results-section">
-                        
-                        
+                    
                         <div class="results">
                             <h2 id="resultTitle" style="display:none;">Hasil Simulasi</h2>
                             
-                            <div id="simulationOutput">
-                            </div>
+                            <div id="simulationOutput"></div>
                             
-                            <div id="comparisonOutput" class="comparison-container">
-                            </div>
-    
-                            <div id="stepVisualizationOutput" class="step-visualization-container">
-                                </div>
+                            <div id="stepVisualizationOutput" class="step-visualization-container"></div>
+                            
+                            <div id="comparisonOutput" class="comparison-container"></div>
+
                             
                             <hr id="resultDivider" style="display: none; margin: 30px 0;">
                         </div>
@@ -538,17 +626,17 @@
             </div>
         </section>
     </div>
+    
     <script>
         // Variabel global
         let simulationResults = []; 
-        let allSimulationHistories = {}; // Menyimpan semua hasil: { 'FIFO': history, 'LRU': history, 'Optimal': history }
-        let activeAlgorithm = null;      // Algoritma yang sedang divisualisasikan langkah demi langkah
-        let stepPointer = 0;             // Penunjuk langkah saat ini
-        let playTimer = null;            // ID Timer untuk fungsi Play
-        let currentFrameSize = 0;        // Menyimpan ukuran frame
+        let allSimulationHistories = {};
+        let activeAlgorithm = null;
+        let stepPointer = 0;
+        let playTimer = null;
+        let currentFrameSize = 0;
 
         // --- UTILITAS PEMBANTU ---
-
         function parseReferenceString(str) {
             return str.replace(/[, ]+/g, ' ')
                 .trim()
@@ -557,9 +645,7 @@
                 .map(n => parseInt(n));
         }
 
-        // --- FUNGSI SIMULASI (TIDAK BERUBAH) ---
-        // (Isi fungsi simulateFIFO, simulateLRU, simulateOptimal tetap sama seperti kode Anda)
-
+        // --- FUNGSI SIMULASI ---
         function simulateFIFO(refString, frameSize) { 
             let frames = [];
             let faultCount = 0;
@@ -578,7 +664,7 @@
                     if (frames.length < frameSize) {
                         frames.push(page);
                     } else {
-                        evicted = frames.shift(); // FIFO: Hapus yang pertama masuk
+                        evicted = frames.shift();
                         frames.push(page);
                     }
                 }
@@ -684,11 +770,8 @@
             return { algorithm: "Optimal", faultCount, hitCount, totalAccess: refString.length, history };
         }
 
-
         // --- FUNGSI RENDERING ---
-
         function createSimulationTable(result, frameSize) {
-            // ... (Fungsi createSimulationTable tetap sama untuk hasil akhir)
             const { algorithm, faultCount, hitCount, totalAccess, history } = result;
             
             const faultPercentage = (faultCount / totalAccess) * 100;
@@ -740,7 +823,6 @@
         }
 
         function createComparisonSummary(results) {
-            // ... (Fungsi createComparisonSummary tetap sama)
             if (results.length === 0) return '';
             
             let bestResult = results[0];
@@ -790,8 +872,7 @@
             `;
         }
         
-        // --- FUNGSI STEPPER BARU ---
-
+        // --- FUNGSI STEPPER ---
         function renderStepTableInitial(frameSize) {
             const headerRow = `<thead><tr>
                 <th>L</th>
@@ -812,7 +893,6 @@
             const tableBody = document.getElementById('stepTableBody').querySelector('tbody');
             if (!tableBody) return;
             
-            // Hapus highlight dari baris sebelumnya
             const previousRow = tableBody.querySelector('.current-step-row');
             if (previousRow) {
                 previousRow.classList.remove('current-step-row');
@@ -839,7 +919,6 @@
             
             tableBody.insertAdjacentHTML('beforeend', newRowHtml);
             
-            // Gulir ke baris baru
             const newRow = tableBody.lastElementChild;
             newRow.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
@@ -853,7 +932,7 @@
             activeAlgorithm = algo;
             stepPointer = 0;
             
-            renderStepTableInitial(currentFrameSize); // Buat ulang tabel
+            renderStepTableInitial(currentFrameSize);
             
             document.getElementById('stepCurrentAlgoLabel').textContent = `Visualisasi Langkah: ${algo}`;
             document.getElementById('stepCurrentAlgoLabel').style.display = 'block';
@@ -886,7 +965,6 @@
             }
             
             if (stepPointer >= currentHistory.length) {
-                // Jika sudah selesai, reset dan mulai dari awal
                 setActiveAlgorithm(activeAlgorithm); 
             }
 
@@ -898,7 +976,7 @@
                 } else {
                     step();
                 }
-            }, 800); // Kecepatan putar: 800ms
+            }, 800);
         }
 
         function stopPlay() { 
@@ -915,9 +993,7 @@
         }
 
         // --- FUNGSI UTAMA ---
-
         function toggleComparison() {
-            // ... (Fungsi toggleComparison tetap sama)
             const comparisonDiv = document.getElementById('comparisonOutput');
             const toggleButton = document.getElementById('toggleComparisonButton');
 
@@ -928,11 +1004,11 @@
 
             if (comparisonDiv.style.display === 'block') {
                 comparisonDiv.style.display = 'none';
-                toggleButton.textContent = 'Tampilkan Perbandingan 📊';
+                toggleButton.textContent = '📊 Perbandingan';
             } else {
                 comparisonDiv.innerHTML = createComparisonSummary(simulationResults);
                 comparisonDiv.style.display = 'block';
-                toggleButton.textContent = 'Sembunyikan Perbandingan 🗑️';
+                toggleButton.textContent = '🗑️ Sembunyikan';
                 comparisonDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
@@ -949,19 +1025,23 @@
             const outputDiv = document.getElementById('simulationOutput');
             const comparisonDiv = document.getElementById('comparisonOutput');
             const toggleButton = document.getElementById('toggleComparisonButton');
-            const stepControls = document.getElementById('stepControls');
+            const stepControlsResults = document.querySelector('.results-section #stepControls');
+            const stepControlsInput = document.querySelector('.input-section #stepControls');
             const algoSelector = document.getElementById('algoSelectorContainer');
             const stepOutput = document.getElementById('stepVisualizationOutput');
             const resultDivider = document.getElementById('resultDivider');
 
-            // --- RESET TAMPILAN ---
             outputDiv.innerHTML = '';
             comparisonDiv.innerHTML = '';
             comparisonDiv.style.display = 'none'; 
-            toggleButton.textContent = 'Tampilkan Perbandingan 📊';
+            toggleButton.textContent = '📊 Perbandingan';
             stepOutput.innerHTML = '';
-            stepControls.style.display = '';
-            resultDivider.style.display = '';
+            
+            // Hide both step controls
+            if (stepControlsResults) stepControlsResults.style.display = 'none';
+            if (stepControlsInput) stepControlsInput.style.display = 'none';
+            
+            resultDivider.style.display = 'none';
             document.getElementById('stepCurrentAlgoLabel').style.display = 'none';
             
             simulationResults = []; 
@@ -975,7 +1055,6 @@
                 .filter(cb => cb.checked)
                 .map(cb => cb.value);
 
-            // Validasi Input
             if (refString.some(isNaN) || refString.length === 0 || isNaN(frameSize) || frameSize < 1) {
                 outputDiv.innerHTML = '<p class="summary fault-summary">⚠️ Mohon periksa input: String referensi valid (angka) dan Ukuran bingkai >= 1.</p>';
                 document.getElementById('resultTitle').style.display = 'none';
@@ -992,7 +1071,6 @@
             document.getElementById('resultTitle').style.display = 'block';
             currentFrameSize = frameSize;
 
-            // Jalankan Simulasi dan Simpan Hasil
             if (selectedAlgorithms.includes('FIFO')) {
                 const res = simulateFIFO(refString, frameSize);
                 simulationResults.push(res);
@@ -1009,44 +1087,44 @@
                 allSimulationHistories['Optimal'] = res.history;
             }
             
-            // --- KONTROL STEPPER ---
             if (selectedAlgorithms.length > 0) {
-                stepControls.style.display = 'block';
-                resultDivider.style.display = 'block';
+                // Show step controls in input section
+                if (stepControlsInput) stepControlsInput.style.display = 'block';
+                // Show step controls in results section
+                if (stepControlsResults) {
+                    stepControlsResults.style.display = 'block';
+                    resultDivider.style.display = 'block';
+                }
 
-                // Kasus 1: Hanya 1 Algoritma dipilih (otomatis aktifkan)
                 if (selectedAlgorithms.length === 1) {
                     activeAlgorithm = selectedAlgorithms[0];
-                    algoSelector.innerHTML = ''; // Hapus dropdown jika ada
-                    setActiveAlgorithm(activeAlgorithm); // Aktifkan dan siapkan tabel
-                } 
-                
-                // Kasus 2: Lebih dari 1 Algoritma dipilih (tampilkan pilihan)
-                else {
+                    algoSelector.innerHTML = '';
+                    setActiveAlgorithm(activeAlgorithm);
+                } else {
                     const selectHtml = `
-                        <label for="stepAlgoSelect">Pilih Algoritma untuk Step-by-Step:</label>
+                        <label for="stepAlgoSelect">Pilih Algoritma:</label>
                         <select id="stepAlgoSelect" onchange="setActiveAlgorithm(this.value)">
                             <option value="" disabled selected>-- Pilih Algoritma --</option>
                             ${selectedAlgorithms.map(algo => `<option value="${algo}">${algo}</option>`).join('')}
                         </select>
                     `;
                     algoSelector.innerHTML = selectHtml;
-                    document.getElementById('stepCurrentAlgoLabel').textContent = 'Pilih algoritma untuk memulai visualisasi langkah.';
+                    document.getElementById('stepCurrentAlgoLabel').textContent = 'Pilih algoritma untuk memulai visualisasi.';
                     document.getElementById('stepCurrentAlgoLabel').style.display = 'block';
-
                 }
             }
 
-            // Tampilkan Hasil Detail
             simulationResults.forEach(result => {
                 outputDiv.innerHTML += createSimulationTable(result, frameSize);
             });
             
-            // Aktifkan tombol perbandingan
             toggleButton.disabled = false;
-
-            // Gulir ke step controls
-            stepControls.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Scroll to results section
+            const resultsSection = document.querySelector('.results-section');
+            if (resultsSection) {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         function resetSimulation() {
@@ -1069,17 +1147,22 @@
             stepPointer = 0;
             stopPlay();
             document.getElementById('stepVisualizationOutput').innerHTML = '';
-            document.getElementById('stepControls').style.display = '';
+            
+            // Hide both step controls
+            const stepControlsResults = document.querySelector('.results-section #stepControls');
+            const stepControlsInput = document.querySelector('.input-section #stepControls');
+            if (stepControlsResults) stepControlsResults.style.display = 'none';
+            if (stepControlsInput) stepControlsInput.style.display = 'none';
+            
             document.getElementById('resultDivider').style.display = 'none';
             
             const toggleButton = document.getElementById('toggleComparisonButton');
             toggleButton.disabled = true;
-            toggleButton.textContent = 'Tampilkan Perbandingan 📊';
+            toggleButton.textContent = '📊 Perbandingan';
 
             document.getElementById('simulation-page').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
-        // --- EVENT LISTENER DOM ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('toggleComparisonButton').disabled = true;
 
@@ -1095,4 +1178,4 @@
         });
     </script>
 </body>
-</html>
+</html
